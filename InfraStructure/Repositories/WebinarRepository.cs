@@ -1,20 +1,21 @@
 ﻿using Application.Interfaces;
 using Domain.Entities;
 using InfraStructure.DBContext;
+using Microsoft.EntityFrameworkCore;
 
 namespace InfraStructure.Repositories
 {
     public class WebinarRepository : IWebinarRepository
     {
-        private AppDbContext? _appDbContext = null;
-        public WebinarRepository()
+        private AppDbContext? _context = null;
+        public WebinarRepository(AppDbContext context)
         {
-            _appDbContext = new DbContextFactory().CreateDbContext(Array.Empty<string>());
+            this._context = context;
         }
         public async Task<Webinar> Create(Webinar webinar)
         {
-            _appDbContext.Add<Webinar>(webinar);
-            await _appDbContext.SaveChangesAsync();
+            _context!.Add(webinar);
+            await _context.SaveChangesAsync();
             return webinar;
         }
 

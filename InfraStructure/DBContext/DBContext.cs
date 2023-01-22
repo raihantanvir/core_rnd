@@ -6,12 +6,11 @@ namespace InfraStructure.DBContext
 {
     public class AppDbContext : DbContext
     {
-        public AppDbContext(DbContextOptions options) : base(options)
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
 
         }
 
-        public DbSet<Webinar> Weninars { get; set; }
-
+        public DbSet<Webinar> Webinars { get; set; }
     }
 }
