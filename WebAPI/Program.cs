@@ -1,7 +1,6 @@
-using Application;
+using Presentation;
 using Application.Interfaces;
-using InfraStructure;
-using InfraStructure.Repositories;
+using Presentation.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,11 +11,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-string? connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-builder.Services.AddAppDBContext(connectionString!);
-
-builder.Services.AddApplicationServices();
-builder.Services.AddInfrastructureServices();
+builder.Services.AddServiceLayerServices(builder.Configuration);
+builder.Services.AddScoped(typeof(IWebinarService), typeof(WebinarService));
 
 
 var app = builder.Build();

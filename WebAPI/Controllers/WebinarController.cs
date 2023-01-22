@@ -1,5 +1,7 @@
 ﻿using Application.CQRS.Webinar.Commands;
 using Application.Dtos;
+using Application.Interfaces;
+using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers
@@ -8,42 +10,46 @@ namespace WebAPI.Controllers
     [ApiController]
     public class WebinarController : ApiBaseController
     {
-        // GET: api/<WebinarController>
-        [HttpGet]
-        public IEnumerable<string> Get()
+        private IWebinarService? _webinarService;
+        public WebinarController(IWebinarService webinarService)
         {
-            return new string[] { "value1", "value2" };
+            _webinarService = webinarService;
+        }
+
+        // GET: api/<WebinarController>/?name=xxx
+        [HttpGet]
+        public async Task<IEnumerable<WebinarDto>> Get([FromQuery] string name)
+        {
+            var webinar = new WebinarDto { Name = name };
+            return await _webinarService!.List(webinar);
         }
 
         // GET api/<WebinarController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public async Task<WebinarDto> Get(Guid id)
         {
-            return "value";
+            return await _webinarService!.GetById(id);
         }
 
         // POST api/<WebinarController>
         [HttpPost]
         public async Task Post([FromBody] WebinarDto webinar)
         {
-            var command = new CreateWebinarCommand
-            {
-                Name = webinar.Name,
-                ScheduledOn = webinar.ScheduledOn
-            };
-            await Mediator!.Send(command);
+            await _webinarService!.Create(webinar);
         }
 
-        // PUT api/<WebinarController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        // PUT api/<WebinarController>
+        [HttpPut]
+        public async Task Put([FromBody] WebinarDto webinar)
         {
+            await _webinarService!.Update(webinar);
         }
 
         // DELETE api/<WebinarController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task Delete(Guid id)
         {
+            await _webinarService!.Delete(id);
         }
     }
 }

@@ -16,7 +16,7 @@ namespace Application.CQRS.Webinar.Commands
         private readonly IWebinarRepository _repository;
         public CreateWebinarCommandHandler(IWebinarRepository repository)
         {
-            this._repository = repository;
+            _repository = repository;
         }
         public async Task<WebinarDto> Handle(CreateWebinarCommand request, CancellationToken cancellationToken)
         {
